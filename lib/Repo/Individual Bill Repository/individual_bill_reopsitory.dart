@@ -32,12 +32,25 @@ class IndividualBillRepository {
     return IndividualBill.fromJson(response);
   }
 
- 
-  Future<IndividualBill> filterIndividualApi(
-      {required bearerToken, required subAdminId, required type}) async {
+  Future<IndividualBill> filterIndividualBillsApi(
+      {required subAdminId,
+      required bearerToken,
+      // required financeManagerId,
+      String? startDate,
+      String? endDate,
+      String? paymentType,
+      String? status}) async {
+    if (status == "null" || status == null) {
+      status = "";
+    }
+
+    if (paymentType == "null" || paymentType == null) {
+      paymentType = "";
+    }
     var response = await networkServices.getReq(
-        "${Api.filterResident}/$subAdminId/$type",
+        "${Api.filterIndividualBills}subadminid=$subAdminId&status=$status&paymenttype=$paymentType&startdate=$startDate&enddate=$endDate",
         bearerToken: bearerToken);
+    log(response.toString());
 
     return IndividualBill.fromJson(response);
   }

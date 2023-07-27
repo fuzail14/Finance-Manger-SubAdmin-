@@ -18,4 +18,6 @@ class Api {
   static const String filterResident = "${baseUrl}filterResident";
   static const String getIndividualBillsForFinance =
       "${baseUrl}individual-bill/getIndividualBillsForFinance";
+  static const String filterIndividualBills =
+      "${baseUrl}finance-manager/individual-bills/filterIndividualBills/?";
 }

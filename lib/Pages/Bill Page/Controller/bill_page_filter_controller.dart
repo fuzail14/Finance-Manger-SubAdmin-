@@ -73,4 +73,5 @@ class BillPageFilterController extends GetxController {
       log(stackTrace.toString());
     });
   }
+
 }
