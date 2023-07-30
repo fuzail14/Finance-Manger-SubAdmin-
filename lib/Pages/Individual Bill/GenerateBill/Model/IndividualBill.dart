@@ -152,3 +152,17 @@ class BillItems {
     return _data;
   }
 }
+
+
+class AddBillItem {
+  String? billname;
+  double? billprice;
+
+  AddBillItem({this.billname, this.billprice});
+   Map<String, dynamic> toJson() {
+    return {
+      'billname': billname,
+      'billprice': billprice,
+    };
+  }
+}

@@ -37,6 +37,7 @@ class CustomAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+    
       backgroundColor: whiteColor,
       surfaceTintColor: secondaryColor,
       actionsAlignment: MainAxisAlignment.center,

@@ -73,6 +73,7 @@ class SocietyResidentsView extends GetView {
                 rows: [
                   for (int i = 0; i < controller.li.length; i++) ...[
                     _dataRows(
+                        residentid: controller.li[i].residentid,
                         Name: controller.li[i].firstname
                                 .toUpperCase()
                                 .toString() +
@@ -119,6 +120,7 @@ class SocietyResidentsView extends GetView {
     required mobileno,
     required vechileno,
     required residenttype,
+    required residentid,
     required BuildContext context,
     required index,
     required user,
@@ -129,8 +131,8 @@ class SocietyResidentsView extends GetView {
       cells: <DataCell>[
         DataCell(BuildDataRowText(text: Name ?? "")),
         DataCell(BuildDataRowText(text: Address ?? "")),
-        DataCell(BuildDataRowText(text: propertytype ?? "")),
         DataCell(BuildDataRowText(text: mobileno ?? "")),
+        DataCell(BuildDataRowText(text: propertytype ?? "")),
         DataCell(BuildDataRowText(text: vechileno ?? "")),
         DataCell(BuildDataRowText(text: residenttype ?? "")),
         DataCell(
@@ -139,7 +141,8 @@ class SocietyResidentsView extends GetView {
                 width: 100.w,
                 text: "generate bill",
                 color: Colors.orange), onTap: () {
-          Get.offNamed(individualBillView, arguments: user);
+          Get.offNamed(individualBillView,
+              arguments: [user, residentid, propertytype]);
         })
       ],
     );

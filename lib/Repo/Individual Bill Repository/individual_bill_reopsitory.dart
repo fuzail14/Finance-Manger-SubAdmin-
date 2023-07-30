@@ -54,4 +54,17 @@ class IndividualBillRepository {
 
     return IndividualBill.fromJson(response);
   }
+
+  Future<String> generateIndividualBillApi(
+      {required data, required bearerToken}) async {
+    var response = await networkServices.postFormReq(
+      Api.createIndividualBill,
+      data,
+      bearerToken: bearerToken,
+    );
+    log(response.toString());
+    log(response['message'].toString());
+
+    return response['message'];
+  }
 }

@@ -10,6 +10,7 @@ class Api {
   static const String search = "${baseUrl}finance-manager/bills/search";
 
   static const String generateHouseBill = "${baseUrl}generatehousebill";
+
   static const String generateSocietyApartmentBill =
       "${baseUrl}generatesocietyapartmentbill";
   static const String payBill = "${baseUrl}paybill";
@@ -20,4 +21,9 @@ class Api {
       "${baseUrl}individual-bill/getIndividualBillsForFinance";
   static const String filterIndividualBills =
       "${baseUrl}finance-manager/individual-bills/filterIndividualBills/?";
+
+      static const String createIndividualBill = "${baseUrl}individual-bill/createIndividualBill";
+  
+
+      
 }

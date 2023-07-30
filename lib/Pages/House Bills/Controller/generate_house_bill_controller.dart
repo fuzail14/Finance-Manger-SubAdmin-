@@ -77,4 +77,5 @@ class GenerateHouseBillController extends GetxController {
       log(stackTrace.toString());
     });
   }
+
 }
