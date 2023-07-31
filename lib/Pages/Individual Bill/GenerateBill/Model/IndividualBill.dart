@@ -25,7 +25,6 @@ class IndividualBills {
     required this.subadminid,
     required this.financemanagerid,
     required this.residentid,
-    required this.propertyid,
     required this.billstartdate,
     required this.billenddate,
     required this.duedate,
@@ -47,7 +46,6 @@ class IndividualBills {
   late final int subadminid;
   late final int financemanagerid;
   late final int residentid;
-  late final int propertyid;
   late final String billstartdate;
   late final String billenddate;
   late final String duedate;
@@ -70,7 +68,6 @@ class IndividualBills {
     subadminid = json['subadminid'];
     financemanagerid = json['financemanagerid'];
     residentid = json['residentid'];
-    propertyid = json['propertyid'];
     billstartdate = json['billstartdate'];
     billenddate = json['billenddate'];
     duedate = json['duedate'];
@@ -95,7 +92,6 @@ class IndividualBills {
     _data['subadminid'] = subadminid;
     _data['financemanagerid'] = financemanagerid;
     _data['residentid'] = residentid;
-    _data['propertyid'] = propertyid;
     _data['billstartdate'] = billstartdate;
     _data['billenddate'] = billenddate;
     _data['duedate'] = duedate;
@@ -150,19 +146,5 @@ class BillItems {
     _data['created_at'] = createdAt;
     _data['updated_at'] = updatedAt;
     return _data;
-  }
-}
-
-
-class AddBillItem {
-  String? billname;
-  double? billprice;
-
-  AddBillItem({this.billname, this.billprice});
-   Map<String, dynamic> toJson() {
-    return {
-      'billname': billname,
-      'billprice': billprice,
-    };
   }
 }

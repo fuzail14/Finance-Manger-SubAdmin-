@@ -77,8 +77,6 @@ class IndividualBillView extends GetView {
                 rows: [
                   for (int i = 0; i < controller.li.length; i++) ...[
                     _dataRows(
-                      billName: controller.li[i].billItems,
-                      billPrice: controller.li[i].billItems,
                       charges: controller.li[i].charges,
                       latecharges:
                           controller.li[i].latecharges.toString().toUpperCase(),
@@ -120,8 +118,6 @@ class IndividualBillView extends GetView {
   }
 
   DataRow _dataRows({
-    required List<dynamic> billName,
-    required List<dynamic> billPrice,
     required charges,
     required latecharges,
     required tax,
@@ -138,6 +134,13 @@ class IndividualBillView extends GetView {
     required index,
     required IndividualBillController controller,
   }) {
+    IndividualBills individualBill = controller.li[index];
+    List<BillItems> billItems = individualBill.billItems;
+    List<String> billNames =
+        billItems.map((billItem) => billItem.billname).toList();
+    List<String> billPrices =
+        billItems.map((billItem) => billItem.billprice).toList();
+
     return DataRow(
       color: MaterialStateProperty.resolveWith(
           (states) => index % 2 == 0 ? HexColor('#FDFDFD') : null),
@@ -146,18 +149,15 @@ class IndividualBillView extends GetView {
           width: 200.w,
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: controller.li.length,
+            itemCount: billNames.length,
             itemBuilder: (context, itemIndex) {
-              IndividualBills individualBill = controller.li[itemIndex];
-
-              List<BillItems> billItems = individualBill.billItems;
-
-              List<String> billNames =
-                  billItems.map((billItem) => billItem.billname).toList();
-
-              String billNamesString = billNames.join(", ");
-
-              return Text(billNamesString);
+              return Text(
+                billNames[itemIndex],
+                style: GoogleFonts.montserrat(
+                    fontSize: 16.sp,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700),
+              );
             },
           ),
         )),
@@ -165,18 +165,15 @@ class IndividualBillView extends GetView {
           width: 200.w,
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: controller.li.length,
+            itemCount: billPrices.length,
             itemBuilder: (context, itemIndex) {
-              IndividualBills individualBill = controller.li[itemIndex];
-
-              List<BillItems> billItems = individualBill.billItems;
-
-              List<String> billPrices =
-                  billItems.map((billItem) => billItem.billprice).toList();
-
-              String billPricesString = billPrices.join(", ");
-
-              return Text(billPricesString);
+              return Text(
+                billPrices[itemIndex],
+                style: GoogleFonts.montserrat(
+                    fontSize: 16.sp,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700),
+              );
             },
           ),
         )),
@@ -415,20 +412,19 @@ class IndividualBillView extends GetView {
                           snackPosition: SnackPosition.BOTTOM);
                     } else {
                       controller.generateIndividualBillApi(
-                          subAdminId: controller.user.data!.subadminid,
-                          financeManagerId: controller.user.data!.id,
-                          dueDate: controller.dueDate,
-                          billStartDate: controller.startDate,
-                          billEndDate: controller.endDate,
-                          bearerToken: controller.user.bearer,
-                          residentid: controller.residentid,
-                          //propertyid: propertyid,
-                          billtype: controller.propertyType,
-                          latecharges: controller.lateChargesController.text,
-                          tax: controller.taxPriceController.text,
-                          bill_items: controller.billItems.map((item) => item.toJson()).toList(),
-
-                          );
+                        subAdminId: controller.user.data!.subadminid,
+                        financeManagerId: controller.user.data!.id,
+                        dueDate: controller.dueDate,
+                        billStartDate: controller.startDate,
+                        billEndDate: controller.endDate,
+                        bearerToken: controller.user.bearer,
+                        residentid: controller.residentid,
+                        //propertyid: propertyid,
+                        billtype: controller.propertyType,
+                        latecharges: controller.lateChargesController.text,
+                        tax: controller.taxPriceController.text,
+                        bill_items: controller.billItems,
+                      );
                     }
                   }
                 }
@@ -455,6 +451,7 @@ class IndividualBillView extends GetView {
                             suffixIcon: const Icon(Icons.price_change),
                             fillColor: Colors.white,
                             validator: emptyStringValidator,
+                            textInputType: TextInputType.number,
                             hintText: 'Bill Price',
                             labelText: 'Bill Price',
                           ),
@@ -469,7 +466,9 @@ class IndividualBillView extends GetView {
                               if (!controller.loading) {
                                 if (controller.addItemformKey.currentState!
                                     .validate()) {
-                                  controller.addBillItem();
+                                  controller.addBillItem(
+                                      controller.billNameController.text,
+                                      controller.billPriceController.text);
                                 }
                               }
                             },
@@ -480,19 +479,38 @@ class IndividualBillView extends GetView {
 
                     // Display the entered bill items
                     20.ph,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: controller.billItems.map((billItem) {
-                        return Text(
-                          '${billItem.billname}: \$${billItem.billprice}',
-                          style: GoogleFonts.montserrat(
-                              color: primaryColor,
-                              fontSize: 24.sp,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w700),
-                        );
-                      }).toList(),
+                    Container(
+                      height: 150.h,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: controller.billItems.length,
+                        itemBuilder: (context, index) {
+                          String billName =
+                              controller.billItems[index]["billname"];
+                          double billPrice =
+                              controller.billItems[index]["billprice"];
+                          return ListTile(
+                            title: Text(
+                              billName,
+                              style: GoogleFonts.montserrat(
+                                  color: primaryColor,
+                                  fontSize: 24.sp,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            subtitle: Text(
+                              '\$${billPrice.toStringAsFixed(2)}',
+                              style: GoogleFonts.montserrat(
+                                  color: primaryColor,
+                                  fontSize: 24.sp,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          );
+                        },
+                      ),
                     ),
+
                     20.ph,
                     MyTextFormField(
                       controller: controller.taxPriceController,

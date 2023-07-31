@@ -63,7 +63,7 @@ class IndividualBillController extends GetxController {
   List<IndividualBills> li = [];
   List<BillItems> billItemsList = [];
 
-  List<AddBillItem> billItems = [];
+  List<Map<String, dynamic>> billItems = [];
   final formKey = GlobalKey<FormState>();
   final addItemformKey = GlobalKey<FormState>();
 
@@ -180,15 +180,17 @@ class IndividualBillController extends GetxController {
     });
   }
 
-  void addBillItem() {
-    String billname = billNameController.text.trim();
-    String billprice = billPriceController.text.trim();
-    if (billname.isNotEmpty && billprice.isNotEmpty) {
-      double billpriceDouble = double.tryParse(billprice) ?? 0;
-      AddBillItem newBillItem =
-          AddBillItem(billname: billname, billprice: billpriceDouble);
+  void addBillItem(billName, billPrice) {
+    double billPriceParsed = double.tryParse(billPrice) ?? 0.0;
+    print("billPriceParsed $billPriceParsed");
 
-      billItems.add(newBillItem);
+    if (billName.isNotEmpty && billPriceParsed > 0.0) {
+      Map<String, dynamic> billData = {
+        "billname": billName,
+        "billprice": billPriceParsed,
+      };
+      billItems.add(billData);
+
       billNameController.clear();
       billPriceController.clear();
 
@@ -196,26 +198,26 @@ class IndividualBillController extends GetxController {
     }
   }
 
-  generateIndividualBillApi(
-      {required subAdminId,
-      required financeManagerId,
-      required dueDate,
-      required billStartDate,
-      required billEndDate,
-      required bearerToken,
-      required residentid,
-      //required propertyid,
-      required billtype,
-      //required paymenttype,
-      required latecharges,
-      required tax,
-      required bill_items
-}) {
+  generateIndividualBillApi({
+    required subAdminId,
+    required financeManagerId,
+    required dueDate,
+    required billStartDate,
+    required billEndDate,
+    required bearerToken,
+    required residentid,
+    //required propertyid,
+    required billtype,
+    //required paymenttype,
+    required latecharges,
+    required tax,
+    required List<Map<String, dynamic>> bill_items,
+  }) {
     loading = true;
     update();
 
     print(financeManagerId);
-    print("billItems ${bill_items}");
+    // String billItemsJson = jsonEncode(bill_items);
 
     Map<String, String> data = <String, String>{
       'subadminid': subAdminId.toString(),
@@ -230,8 +232,17 @@ class IndividualBillController extends GetxController {
       'latecharges': latecharges.toString(),
       'tax': tax.toString(),
       'isbilllate': 0.toString(),
-      'bill_items': jsonEncode(bill_items),
+      //'bill_items': billItemsJson,
     };
+
+    // Add the bill_items directly to the data map
+    for (int i = 0; i < bill_items.length; i++) {
+      data['bill_items[$i][billname]'] = bill_items[i]['billname'];
+      data['bill_items[$i][billprice]'] = bill_items[i]['billprice'].toString();
+
+      print(data['bill_items[$i][billname]']);
+      print(data['bill_items[$i][billprice]']);
+    }
 
     individualBillRepository
         .generateIndividualBillApi(bearerToken: bearerToken, data: data)
@@ -243,6 +254,7 @@ class IndividualBillController extends GetxController {
         print(value);
         Get.snackbar('Message', value, backgroundColor: Colors.white);
         setResponseStatus(Status.completed);
+        Get.back();
       }
     }).onError((error, stackTrace) {
       loading = false;

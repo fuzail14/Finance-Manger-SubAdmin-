@@ -59,6 +59,7 @@ class MyTextFormField extends StatelessWidget {
             fontWeight: FontWeight.w500, fontSize: 24.sp, letterSpacing: 0.05),
         keyboardType: textInputType,
         textAlign: TextAlign.left,
+          
         onTap: onTap,
         validator: validator,
         maxLines: maxLines ?? 1,
