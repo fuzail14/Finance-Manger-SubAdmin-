@@ -21,6 +21,7 @@ class Api {
       "${baseUrl}individual-bill/getIndividualBillsForFinance";
   static const String filterIndividualBills =
       "${baseUrl}individual-bill/filterIndividualBills/?";
+      
 
       static const String createIndividualBill = "${baseUrl}individual-bill/createIndividualBill";
   

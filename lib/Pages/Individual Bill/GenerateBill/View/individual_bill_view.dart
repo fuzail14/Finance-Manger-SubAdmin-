@@ -18,6 +18,7 @@ import '../../../Bill Page/Widgets/build_data_column_status_card.dart';
 import '../../../Bill Page/Widgets/build_data_column_text.dart';
 import '../../../Bill Page/Widgets/build_data_row_text.dart';
 import '../../../Bill Page/Widgets/custom_alert_dialog.dart';
+import '../../../Bill Page/Widgets/payment_bill_widget.dart';
 import '../../../Bill Page/Widgets/reusable_dropdown.dart';
 import '../Controller/individual_bill_controller.dart';
 import '../Model/IndividualBill.dart';
@@ -188,7 +189,28 @@ class IndividualBillView extends GetView {
         DataCell(BuildDataRowText(text: duedate ?? "")),
         DataCell(BuildDataRowText(text: billtype ?? "")),
         DataCell(BuildDataRowText(text: paymenttype ?? "")),
-        DataCell(BuildDataRowText(text: status ?? "")),
+        if (status == 'unpaid')
+          DataCell(
+              const BuildDataColumnStatusCard(
+                  text: "Unpaid", color: Colors.orange), onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return _selectPaymentMethodDialog(
+                    // id: id,
+                    context: context,
+                    // dueDate: dueDate,
+                    // appCharges: appCharges,
+                    // balance: balance,
+                    // payAbleAmount: payAbleAmount,
+                    // noOfAppUsers: noOfAppUsers,
+                    // month: billingMonth,
+                  );
+                });
+          })
+        else if (status == 'paid')
+          const DataCell(
+              BuildDataColumnStatusCard(text: "Paid", color: Colors.green)),
       ],
     );
   }
@@ -606,6 +628,89 @@ class IndividualBillView extends GetView {
               ),
             ),
           );
+        });
+  }
+
+  CustomAlertDialog _paymentDialog({
+    required BuildContext context,
+    // required id,
+    // required dueDate,
+    // required appCharges,
+    // required balance,
+    // required payAbleAmount,
+    // required month,
+    // required noOfAppUsers,
+  }) {
+    return CustomAlertDialog(
+      titleText: 'Payment',
+      icon: Icons.payments,
+      positiveButtonText: 'Proceed',
+      context: context,
+      onTapPositive: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return _selectPaymentMethodDialog(
+                context: context,
+                //id: id, payAbleAmount: payAbleAmount
+              );
+            });
+      },
+      // child: PaymentBillWidget(
+      //   dueDate: dueDate,
+      //   appCharges: appCharges,
+      //   balance: balance,
+      //   payAbleAmount: payAbleAmount,
+      //   month: month,
+      //   noOfAppUsers: noOfAppUsers,
+      // ),
+    );
+  }
+
+  Widget _selectPaymentMethodDialog({
+    required BuildContext context,
+    //required id, required payAbleAmount
+  }) {
+    return GetBuilder<IndividualBillController>(
+        init: IndividualBillController(),
+        builder: (controller) {
+          return CustomAlertDialog(
+              context: context,
+              icon: Icons.payments,
+              titleText: 'Select Payment Method',
+              loading: controller.loading,
+              onTapPositive: () {
+                // if (controller.paymentVal != null) {
+                //   if (!controller.loading) {
+
+                //     controller.payBillApi(
+                //         id: id.toString(),
+                //         paymentType: controller.paymentVal.toString(),
+                //         bearerToken: controller.billPageController.user.bearer,
+                //         totalPaidAmount: payAbleAmount);
+
+                //     controller.refreshUI();
+                //     Navigator.pop(context);
+                //     Navigator.pop(context);
+                //   }
+                // } else {
+                //   Get.snackbar('Error', 'please Select Payment Method',
+                //       colorText: Colors.redAccent,
+                //       backgroundColor: Colors.white);
+                // }
+              },
+              child: Column(
+                children: [
+                  ReusableDropdown(
+                    value: controller.paymentTypeValue,
+                    items: controller.paymentTypes,
+                    onChanged: (value) {
+                      //controller.setPaymentVal(value: value);
+                    },
+                    hint: "Select Payment Method",
+                  ),
+                ],
+              ));
         });
   }
 }

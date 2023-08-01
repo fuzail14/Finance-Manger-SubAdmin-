@@ -414,6 +414,7 @@ class BillPage extends GetView {
         else if (status == 'paid')
           const DataCell(
               BuildDataColumnStatusCard(text: "Paid", color: Colors.green)),
+              
       ],
     );
   }
