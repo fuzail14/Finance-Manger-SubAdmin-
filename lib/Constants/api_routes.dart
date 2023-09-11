@@ -1,6 +1,6 @@
 class Api {
-  static const String imageBaseUrl = 'http://192.168.2.48:8080/storage/';
-  static const String baseUrl = 'http://192.168.2.48:8080/api/';
+  static const String imageBaseUrl = 'http://192.168.18.137:8080/storage/';
+  static const String baseUrl = 'http://192.168.18.137:8080/api/';
   static const String login = "${baseUrl}login";
   static const String fcmtokenrefresh = "${baseUrl}fcmtokenrefresh";
   static const String currentMonthBills =
@@ -21,10 +21,7 @@ class Api {
       "${baseUrl}individual-bill/getIndividualBillsForFinance";
   static const String filterIndividualBills =
       "${baseUrl}individual-bill/filterIndividualBills/?";
-      
 
-      static const String createIndividualBill = "${baseUrl}individual-bill/createIndividualBill";
-  
-
-      
+  static const String createIndividualBill =
+      "${baseUrl}individual-bill/createIndividualBill";
 }
